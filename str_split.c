@@ -8,38 +8,38 @@
  */
 char **str_split(char *buf, const char *del)
 {
-	char **tokens = NULL;
-	int n_tokens = 0;
+	char **tok = NULL;
+	int n_tok = 0;
 	char *strike = strtok(buf, del);
 
 	while (strike)
 	{
-		tokens = _realc(tokens, n_tokens * sizeof(char *), (n_tokens + 1) * sizeof(char *));
-		if (!tokens)
+		tok = _realc(tok, n_tok * sizeof(char *), (n_tok + 1) * sizeof(char *));
+		if (!tok)
 		{
 			perror("error");
 			exit(1);
 		}
 
-		tokens[n_tokens] = (char *)malloc(strlen(strike) + 1);
-		if (!tokens[n_tokens])
+		tok[n_tok] = (char *)malloc(strlen(strike) + 1);
+		if (!tok[n_tok])
 		{
 			perror("error");
 			exit(1);
 		}
 
-		strcpy(tokens[n_tokens], strike);
+		strcpy(tok[n_tok], strike);
 
-		n_tokens++;
+		n_tok++;
 		strike = strtok(NULL, del);
 	}
 
-	tokens = _realc(tokens, n_tokens * sizeof(char *), (n_tokens + 1) * sizeof(char *));
-	if (!tokens)
+	tok = _realc(tok, n_tok * sizeof(char *), (n_tok + 1) * sizeof(char *));
+	if (!tok)
 	{
 		perror("error");
 		exit(1);
 	}
-	tokens[n_tokens] = NULL;
-	return (tokens);
+	tok[n_tok] = NULL;
+	return (tok);
 }
