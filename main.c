@@ -1,9 +1,16 @@
 #include "main.h"
 
+/**
+ * main - Simple shell program that takes user input
+ * @ac: The number of command-line arguments (unused).
+ * @av: An array of command-line argument strings (unused).
+ * @env: An array of environment variables.
+ * Return: Returns 0 on successful execution.
+ */
 int main(int ac, char **av, char **env)
 {
-	size_t buf_size = 0;
 	char *buf = NULL;
+	size_t buf_size = 0;
 	char **argums = NULL;
 	pid_t pid;
 	int status;
@@ -11,6 +18,7 @@ int main(int ac, char **av, char **env)
 	int count_commands = 0;
 
 	(void)ac;
+	(void)av;
 	if (!isatty(STDIN_FILENO))
 	{
 		inter = 0;
@@ -39,25 +47,32 @@ int main(int ac, char **av, char **env)
 		}
 
 
-		for (int i = 0; argums[i] != NULL; i++)
+		if (access(argums[0], X_OK) == 0)
 		{
-			if (compare_string_strcmp(argums[i], argums[0]) == 0)
-				count_commands++;
-		}
 
-
-		if (count_commands == 4)
-		{
-			for (int i = 0; i < 4; i++)
+			if (count_commands > 0 && compare_string_strcmp(argums[0], argums[1]) == 0)
 			{
+
+				for (int i = 0; i < 4; i++)
+				{
+					pid = fork();
+					if (pid == 0)
+					{
+						comnd_exec(argums, env);
+						exit(EXIT_SUCCESS);
+					}
+					else
+					{
+						wait(&status);
+					}
+				}
+			}
+			else
+			{
+				count_commands = 0;
 				pid = fork();
 				if (pid == 0)
 				{
-
-					char *cmd = malloc(strlen(buf) + 3);
-					sprintf(cmd, " %s ", buf);
-					argums[0] = cmd;
-
 					comnd_exec(argums, env);
 					exit(EXIT_SUCCESS);
 				}
@@ -66,25 +81,19 @@ int main(int ac, char **av, char **env)
 					wait(&status);
 				}
 			}
+
+			count_commands++;
 		}
 		else
 		{
-			pid = fork();
-			if (pid == 0)
-			{
-				comnd_exec(argums, env);
-				exit(EXIT_SUCCESS);
-			}
-			else
-			{
-				wait(&status);
-			}
+
+			printf("Command not found: %s\n", argums[0]);
 		}
 
 		tok_free(argums);
 	}
 
 	free(buf);
-	return 0;
+	return (0);
 }
 
