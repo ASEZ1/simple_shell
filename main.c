@@ -13,9 +13,8 @@ int main(int ac, char **av, char **env)
 	size_t buf_size = 0;
 	char **argums = NULL;
 	pid_t pid;
-	int status;
+	int status, x_character;
 	int inter = 1;
-	int count_commands = 0;
 
 	(void)ac;
 	(void)av;
@@ -23,14 +22,13 @@ int main(int ac, char **av, char **env)
 	{
 		inter = 0;
 	}
-
 	while (1)
 	{
 		if (inter)
 		{
 			write(1, "$ ", 2);
 		}
-		ssize_t x_character = getline(&buf, &buf_size, stdin);
+		x_character = getline(&buf, &buf_size, stdin);
 		if (x_character == -1)
 		{
 			if (inter)
@@ -45,55 +43,17 @@ int main(int ac, char **av, char **env)
 			tok_free(argums);
 			break;
 		}
-
-
-		if (access(argums[0], X_OK) == 0)
+		pid = fork();
+		if (pid == 0)
 		{
-
-			if (count_commands > 0 && compare_string_strcmp(argums[0], argums[1]) == 0)
-			{
-
-				for (int i = 0; i < 4; i++)
-				{
-					pid = fork();
-					if (pid == 0)
-					{
-						comnd_exec(argums, env);
-						exit(EXIT_SUCCESS);
-					}
-					else
-					{
-						wait(&status);
-					}
-				}
-			}
-			else
-			{
-				count_commands = 0;
-				pid = fork();
-				if (pid == 0)
-				{
-					comnd_exec(argums, env);
-					exit(EXIT_SUCCESS);
-				}
-				else
-				{
-					wait(&status);
-				}
-			}
-
-			count_commands++;
+			comnd_exec(argums, env);
 		}
 		else
 		{
-
-			printf("Command not found: %s\n", argums[0]);
+			wait(&status);
+			tok_free(argums);
 		}
-
-		tok_free(argums);
 	}
-
 	free(buf);
 	return (0);
 }
-
