@@ -49,8 +49,8 @@ int main(int ac, char **av, char **env)
 		{
 
 			comnd_exec(argums, env);
-			perror("Error executing command"); 
-			exit(EXIT_FAILURE); 
+			perror("Error executing command");
+			exit(EXIT_FAILURE);
 		}
 		else if (pid < 0)
 		{
