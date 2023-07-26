@@ -1,7 +1,5 @@
 #include "main.h"
 
-#include "main.h"
-
 /**
  * main - Simple shell program that takes user input
  * @ac: The number of command-line arguments (unused).
