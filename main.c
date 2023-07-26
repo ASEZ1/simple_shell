@@ -5,7 +5,7 @@
  * @ac: The number of command-line arguments (unused).
  * @av: An array of command-line argument strings (unused).
  * @env: An array of environment variables.
- * Return: Returns 0 on successful execution.
+ * Return: Returns the exit status of the last command executed.
  */
 int main(int ac, char **av, char **env)
 {
@@ -13,7 +13,8 @@ int main(int ac, char **av, char **env)
 	size_t buf_size = 0;
 	char **argums = NULL;
 	pid_t pid;
-	int status, x_character;
+	int status = 0; 
+	int x_character;
 	int inter = 1;
 
 	(void)ac;
@@ -65,10 +66,14 @@ int main(int ac, char **av, char **env)
 		else
 		{
 			wait(&status);
+			if (WIFEXITED(status)) {
+				status = WEXITSTATUS(status);
+			}
 			tok_free(argums);
 		}
 	}
 
 	free(buf);
-	return (0);
+	return (status);
 }
+
