@@ -23,9 +23,6 @@ int main(int ac, char **av, char **env)
 	{
 		inter = 0;
 	}
-
-	char *command = "/bin/ls    ";
-
 	while (1)
 	{
 		if (inter)
@@ -50,22 +47,14 @@ int main(int ac, char **av, char **env)
 		pid = fork();
 		if (pid == 0)
 		{
-			if (compare_string_strcmp(argums[0], "/bin/ls") == 0)
-			{
-				for (int i = 0; i < 4; i++)
-				{
-					comnd_exec(argums, env);
-				}
-			}
-			else
-			{
-				comnd_exec(argums, env);
-			}
-			perror("Error executing command");
-			exit(EXIT_FAILURE);
+
+			comnd_exec(argums, env);
+			perror("Error executing command"); 
+			exit(EXIT_FAILURE); 
 		}
 		else if (pid < 0)
 		{
+
 			perror("Fork error");
 		}
 		else
@@ -77,4 +66,3 @@ int main(int ac, char **av, char **env)
 	free(buf);
 	return (0);
 }
-
