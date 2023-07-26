@@ -14,13 +14,20 @@ int main(int ac, char **av, char **env)
 	char **argums = NULL;
 	pid_t pid;
 	int status, x_character;
+	int inter = 1;
 
 	(void)ac;
 	(void)av;
-
+	if (!isatty(STDIN_FILENO))
+	{
+		inter = 0;
+	}
 	while (1)
 	{
-		write(1, "$ ", 2);
+		if (inter)
+		{
+			write(1, "$ ", 2);
+		}
 		x_character = getline(&buf, &buf_size, stdin);
 		if (x_character == -1)
 		{
