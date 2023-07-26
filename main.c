@@ -46,7 +46,12 @@ int main(int ac, char **av, char **env)
 		pid = fork();
 		if (pid == 0)
 		{
-			comnd_exec(argums, env);
+			if (comnd_exec(argums, env) == -1)
+			{
+				exit(EXIT_FAILURE);
+			}
+
+			exit(EXIT_SUCCESS);
 		}
 		else
 		{
@@ -57,3 +62,4 @@ int main(int ac, char **av, char **env)
 	free(buf);
 	return (0);
 }
+
