@@ -23,6 +23,9 @@ int main(int ac, char **av, char **env)
 	{
 		inter = 0;
 	}
+
+	char *command = "/bin/ls    ";
+
 	while (1)
 	{
 		if (inter)
@@ -44,46 +47,31 @@ int main(int ac, char **av, char **env)
 			tok_free(argums);
 			break;
 		}
-		if (compare_string_strcmp(argums[0], "/bin/ls") == 0)
+		pid = fork();
+		if (pid == 0)
 		{
-			for (int i = 0; i < 4; i++)
+			if (compare_string_strcmp(argums[0], "/bin/ls") == 0)
 			{
-				pid = fork();
-				if (pid == 0)
+				for (int i = 0; i < 4; i++)
 				{
 					comnd_exec(argums, env);
-					perror("Error executing command");
-					exit(EXIT_FAILURE);
 				}
-				else if (pid < 0)
-				{
-					perror("Fork error");
-				}
-				else
-				{
-					wait(&status);
-				}
-			}
-			tok_free(argums);
-		}
-		else
-		{
-			pid = fork();
-			if (pid == 0)
-			{
-				comnd_exec(argums, env);
-				perror("Error executing command");
-				exit(EXIT_FAILURE);
-			}
-			else if (pid < 0)
-			{
-				perror("Fork error");
 			}
 			else
 			{
-				wait(&status);
-				tok_free(argums);
+				comnd_exec(argums, env);
 			}
+			perror("Error executing command");
+			exit(EXIT_FAILURE);
+		}
+		else if (pid < 0)
+		{
+			perror("Fork error");
+		}
+		else
+		{
+			wait(&status);
+			tok_free(argums);
 		}
 	}
 	free(buf);
