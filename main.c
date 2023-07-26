@@ -1,5 +1,7 @@
 #include "main.h"
 
+#include "main.h"
+
 /**
  * main - Simple shell program that takes user input
  * @ac: The number of command-line arguments (unused).
@@ -7,7 +9,6 @@
  * @env: An array of environment variables.
  * Return: Returns 0 on successful execution.
  */
-
 int main(int ac, char **av, char **env)
 {
 	char *buf = NULL;
@@ -19,42 +20,48 @@ int main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+
 	if (!isatty(STDIN_FILENO))
-	{
 		inter = 0;
-	}
+
 	while (1)
 	{
 		if (inter)
-		{
 			write(1, "$ ", 2);
-		}
+
 		x_character = getline(&buf, &buf_size, stdin);
 		if (x_character == -1)
 		{
 			if (inter)
-			{
 				write(1, "\n", 1);
-			}
 			break;
 		}
+
 		argums = str_split(buf, " \t\n");
+		if (!argums || argums[0] == NULL)
+		{
+			free(buf);
+			if (argums)
+			{
+				tok_free(argums);
+			}
+			exit(EXIT_SUCCESS);
+		}
 		if (compare_string_strcmp(argums[0], "exit") == 0)
 		{
 			tok_free(argums);
 			break;
 		}
+
 		pid = fork();
 		if (pid == 0)
 		{
-
 			comnd_exec(argums, env);
-			perror("Error executing command"); 
-			exit(EXIT_FAILURE); 
+			perror("Error executing command");
+			exit(EXIT_FAILURE);
 		}
 		else if (pid < 0)
 		{
-
 			perror("Fork error");
 		}
 		else
@@ -63,6 +70,7 @@ int main(int ac, char **av, char **env)
 			tok_free(argums);
 		}
 	}
+
 	free(buf);
 	return (0);
 }
