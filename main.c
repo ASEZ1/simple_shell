@@ -31,7 +31,10 @@ int main(int ac, char **av, char **env)
 		x_character = getline(&buf, &buf_size, stdin);
 		if (x_character == -1)
 		{
-			write(1, "\n", 1);
+			if (inter)
+			{
+				write(1, "\n", 1);
+			}
 			break;
 		}
 		argums = str_split(buf, " \t\n");
