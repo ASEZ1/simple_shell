@@ -13,7 +13,7 @@ int main(int ac, char **av, char **env)
 	size_t buf_size = 0;
 	char **argums = NULL;
 	pid_t pid;
-	int status = 0; 
+	int status = 0;
 	int x_character;
 	int inter = 1;
 
@@ -56,17 +56,18 @@ int main(int ac, char **av, char **env)
 		if (pid == 0)
 		{
 			comnd_exec(argums, env);
-			perror("Error executing command");
+			perror("Error");
 			exit(EXIT_FAILURE);
 		}
 		else if (pid < 0)
 		{
-			perror("Fork error");
+			perror("Error");
 		}
 		else
 		{
 			wait(&status);
-			if (WIFEXITED(status)) {
+			if (WIFEXITED(status))
+			{
 				status = WEXITSTATUS(status);
 			}
 			tok_free(argums);
