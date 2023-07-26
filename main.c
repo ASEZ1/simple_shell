@@ -7,6 +7,7 @@
  * @env: An array of environment variables.
  * Return: Returns 0 on successful execution.
  */
+
 int main(int ac, char **av, char **env)
 {
 	char *buf = NULL;
@@ -46,12 +47,15 @@ int main(int ac, char **av, char **env)
 		pid = fork();
 		if (pid == 0)
 		{
-			if (comnd_exec(argums, env) == -1)
-			{
-				exit(EXIT_FAILURE);
-			}
 
-			exit(EXIT_SUCCESS);
+			comnd_exec(argums, env);
+			perror("Error executing command"); 
+			exit(EXIT_FAILURE); 
+		}
+		else if (pid < 0)
+		{
+
+			perror("Fork error");
 		}
 		else
 		{
